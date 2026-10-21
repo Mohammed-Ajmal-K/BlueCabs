@@ -20,5 +20,47 @@ document.addEventListener("DOMContentLoaded",()=>{
   const lb=$("#lightbox");
   $$(".masonry button").forEach(btn=>btn.addEventListener("click",()=>{const img=$("img",btn);$("img",lb).src=img.src;$("img",lb).alt=img.alt;lb.classList.add("show")}));
   $("button",lb).addEventListener("click",()=>lb.classList.remove("show")); lb.addEventListener("click",e=>e.target===lb&&lb.classList.remove("show"));
-  $("#bookingForm").addEventListener("submit",e=>{e.preventDefault();$("#toast").classList.add("show");e.target.reset();setTimeout(()=>$("#toast").classList.remove("show"),4000)});
+  $("#bookingForm").addEventListener("submit", e => {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const data = new FormData(form);
+
+  const name = data.get("name").trim();
+  const phone = data.get("phone").trim();
+  const email = data.get("email").trim();
+  const date = data.get("date");
+  const destination = data.get("destination").trim();
+  const details = data.get("message").trim();
+
+  const whatsappNumber = "917012256220";
+
+  const message = `
+*NEW TRIP ENQUIRY*
+Blue Cabs and Travels
+
+*Customer Details*
+Name: ${name}
+Phone: ${phone}
+Email: ${email || "Not provided"}
+
+*Trip Details*
+Travel Date: ${date || "Not decided"}
+Destination: ${destination}
+Additional Information: ${details || "Not provided"}
+
+Please contact me with the itinerary and quotation.
+  `.trim();
+
+  const whatsappURL =
+    `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+  window.open(whatsappURL, "_blank", "noopener,noreferrer");
+});
 });
